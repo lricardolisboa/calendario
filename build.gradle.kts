@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "2.3.1.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.3.72"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.3.72"
 
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
@@ -31,6 +32,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "kotlin")
     apply(plugin = "kotlin-allopen")
+    apply(plugin = "kotlin-noarg")
 
     repositories {
         mavenLocal()
@@ -48,6 +50,24 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+        testImplementation ("org.assertj:assertj-core:3.11.1")
+        testImplementation ("org.junit.jupiter:junit-jupiter-api:5.2.0")
+        testImplementation ("org.junit.jupiter:junit-jupiter-params:5.2.0")
+        testImplementation ("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+        testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    }
+
+    allOpen{
+        annotation("org.springframework.stereotype.Component")
+        annotation("org.springframework.stereotype.Service")
+        annotation("org.springframework.stereotype.Repository")
+        annotation("org.springframework.context.annotation.Configuration")
+        annotation("org.springframework.context.annotation.ComponentScan")
+    }
+
+    noArg{
+        annotation("javax.persistence.Entity")
     }
 
     tasks.withType<Test> {
