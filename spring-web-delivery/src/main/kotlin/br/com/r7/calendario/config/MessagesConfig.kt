@@ -21,7 +21,7 @@ class MessagesConfig {
     @Bean
     fun validator(): LocalValidatorFactoryBean {
         val bean = LocalValidatorFactoryBean()
-        bean.setValidationMessageSource(messageSource()!!)
+        bean.setValidationMessageSource(messageSource())
         return bean
     }
 
