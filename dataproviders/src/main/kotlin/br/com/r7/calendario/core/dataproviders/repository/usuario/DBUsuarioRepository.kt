@@ -1,4 +1,4 @@
-package br.com.r7.calendario.core.dataproviders.repository
+package br.com.r7.calendario.core.dataproviders.repository.usuario
 
 import br.com.r7.calendario.core.dataproviders.entities.UsuarioEntity
 import org.springframework.data.jpa.repository.JpaRepository

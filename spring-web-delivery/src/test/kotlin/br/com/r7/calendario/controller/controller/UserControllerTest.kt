@@ -21,10 +21,16 @@ import java.time.LocalDateTime
 
 class UserControllerTest {
 
+    companion object {
+        private const val PATH = "/api/usuarios"
+        private const val MESSAGE = "$.message"
+    }
+
     private lateinit var usuarioDTO: UsuarioDTO
     private lateinit var mockMvc: MockMvc
     private lateinit var novoUsuarioUseCase: NovoUsuarioUseCase
-    private val objectMapper = jacksonObjectMapper().findAndRegisterModules().enable(MapperFeature.USE_ANNOTATIONS)
+    private val objectMapper = jacksonObjectMapper().findAndRegisterModules()
+
     @BeforeEach
     fun init() {
 
@@ -47,7 +53,7 @@ class UserControllerTest {
         whenever(novoUsuarioUseCase.execute(any())).thenReturn(this.usuarioDTO.toUsuario().copy(id = 1))
 
         val usuario = this.objectMapper.writeValueAsString(usuarioDTO)
-        this.mockMvc.perform(post("/api/usuarios").contentType(MediaType.APPLICATION_JSON).content(usuario))
+        this.mockMvc.perform(post(PATH).contentType(MediaType.APPLICATION_JSON).content(usuario))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.senha").isEmpty)
 
@@ -59,9 +65,9 @@ class UserControllerTest {
 
         val usuario = this.objectMapper.writeValueAsString(usuarioDTO.copy(nome = ""))
 
-        this.mockMvc.perform(post("/api/usuarios").contentType(MediaType.APPLICATION_JSON).content(usuario))
+        this.mockMvc.perform(post(PATH).contentType(MediaType.APPLICATION_JSON).content(usuario))
                 .andExpect(status().isBadRequest)
-                .andExpect(jsonPath("$.message").value("{validation.notBlank}"))
+                .andExpect(jsonPath(MESSAGE).value("{validation.notBlank}"))
 
         verify(novoUsuarioUseCase, never()).execute(any())
     }
@@ -71,9 +77,9 @@ class UserControllerTest {
 
         val usuario = this.objectMapper.writeValueAsString(usuarioDTO.copy(login = ""))
 
-        this.mockMvc.perform(post("/api/usuarios").contentType(MediaType.APPLICATION_JSON).content(usuario))
+        this.mockMvc.perform(post(PATH).contentType(MediaType.APPLICATION_JSON).content(usuario))
                 .andExpect(status().isBadRequest)
-                .andExpect(jsonPath("$.message").value("{validation.notBlank}"))
+                .andExpect(jsonPath(MESSAGE).value("{validation.notBlank}"))
 
         verify(novoUsuarioUseCase, never()).execute(any())
     }
@@ -83,9 +89,9 @@ class UserControllerTest {
 
         val usuario = this.objectMapper.writeValueAsString(usuarioDTO.copy(login = "login"))
 
-        this.mockMvc.perform(post("/api/usuarios").contentType(MediaType.APPLICATION_JSON).content(usuario))
+        this.mockMvc.perform(post(PATH).contentType(MediaType.APPLICATION_JSON).content(usuario))
                 .andExpect(status().isBadRequest)
-                .andExpect(jsonPath("$.message").value("{validation.emailInvalid}"))
+                .andExpect(jsonPath(MESSAGE).value("{validation.emailInvalid}"))
 
         verify(novoUsuarioUseCase, never()).execute(any())
     }
@@ -95,9 +101,9 @@ class UserControllerTest {
 
         val usuario = this.objectMapper.writeValueAsString(usuarioDTO.copy(senha = ""))
 
-        this.mockMvc.perform(post("/api/usuarios").contentType(MediaType.APPLICATION_JSON).content(usuario))
+        this.mockMvc.perform(post(PATH).contentType(MediaType.APPLICATION_JSON).content(usuario))
                 .andExpect(status().isBadRequest)
-                .andExpect(jsonPath("$.message").value("{validation.notBlank}"))
+                .andExpect(jsonPath(MESSAGE).value("{validation.notBlank}"))
 
         verify(novoUsuarioUseCase, never()).execute(any())
     }
@@ -107,9 +113,9 @@ class UserControllerTest {
 
         val usuario = this.objectMapper.writeValueAsString(usuarioDTO.copy(dataCadastro = LocalDateTime.now().plusDays(1)))
 
-        this.mockMvc.perform(post("/api/usuarios").contentType(MediaType.APPLICATION_JSON).content(usuario))
+        this.mockMvc.perform(post(PATH).contentType(MediaType.APPLICATION_JSON).content(usuario))
                 .andExpect(status().isBadRequest)
-                .andExpect(jsonPath("$.message").value("{validation.pastOrPresent}"))
+                .andExpect(jsonPath(MESSAGE).value("{validation.pastOrPresent}"))
 
         verify(novoUsuarioUseCase, never()).execute(any())
     }

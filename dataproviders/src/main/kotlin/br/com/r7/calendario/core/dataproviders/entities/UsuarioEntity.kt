@@ -8,10 +8,10 @@ import javax.persistence.*
 @Table(name = "usuarios")
 data class UsuarioEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long?,
-        @Column val login: String,
-        @Column val nome: String,
-        @Column(name = "senha") val senhaCriptografada: String,
-        @Column(name = "data_cadastro") val dataCadastro: LocalDateTime
+        @Column val login: String = "",
+        @Column val nome: String = "",
+        @Column(name = "senha") val senhaCriptografada: String = "",
+        @Column(name = "data_cadastro") val dataCadastro: LocalDateTime = LocalDateTime.now()
 )
 
 fun UsuarioEntity.toUsuario() = Usuario(

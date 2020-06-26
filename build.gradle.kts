@@ -5,6 +5,8 @@ plugins {
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.3.72"
     id("org.jetbrains.kotlin.plugin.noarg") version "1.3.72"
+    id("org.sonarqube") version "2.7"
+    id("jacoco")
 
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
@@ -33,6 +35,7 @@ subprojects {
     apply(plugin = "kotlin")
     apply(plugin = "kotlin-allopen")
     apply(plugin = "kotlin-noarg")
+    apply(plugin = "jacoco")
 
     repositories {
         mavenLocal()
@@ -68,6 +71,12 @@ subprojects {
 
     noArg{
         annotation("javax.persistence.Entity")
+    }
+
+    tasks.jacocoTestReport{
+        reports {
+            xml.isEnabled = true
+        }
     }
 
     tasks.withType<Test> {
