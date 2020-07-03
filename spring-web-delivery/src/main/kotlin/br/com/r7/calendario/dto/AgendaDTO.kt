@@ -11,19 +11,17 @@ import javax.validation.constraints.*
 @JsonIgnoreProperties()
 data class AgendaDTO(val id: Long? = null,
                      @field:NotBlank(message = "{validation.notBlank}") val nome: String = "",
-                     @field:NotBlank(message = "{validation.notBlank}") @field:Size(max = 255,message = "{validation.size.255}") val descricao: String = "",
-                     @field:NotNull(message = "{validation.notNull}") var idUsuario: Long? = null)
+                     @field:NotBlank(message = "{validation.notBlank}") @field:Size(max = 255,message = "{validation.size.255}") val descricao: String = "")
 
 fun Agenda.toAgendaDTO() = AgendaDTO(
         id = id,
         nome = nome,
-        descricao = descricao,
-        idUsuario = idUsuario
+        descricao = descricao
 )
 
-fun AgendaDTO.toAgenda() = Agenda(
+fun AgendaDTO.toAgenda(idUsuario: Long) = Agenda(
         id = id,
         nome = nome,
         descricao = descricao,
-        idUsuario = idUsuario!!
+        idUsuario = idUsuario
 )

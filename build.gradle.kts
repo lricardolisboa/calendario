@@ -19,7 +19,7 @@ repositories {
     jcenter()
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 extra["springVersion"] = "2.3.1.RELEASE"
 

@@ -1,20 +1,10 @@
-package br.com.r7.calendario.usecases
+package br.com.r7.calendario.usecases.agenda
 
 import br.com.r7.calendario.core.Agenda
-import br.com.r7.calendario.core.Usuario
-import br.com.r7.calendario.usecases.agenda.NovaAgendaUseCase
-import br.com.r7.calendario.usecases.exceptions.UsuarioExistenteException
 import br.com.r7.calendario.usecases.gateway.AgendaRepository
-import br.com.r7.calendario.usecases.gateway.UsuarioRepository
-import br.com.r7.calendario.usecases.usuario.NovoUsuarioUseCase
-import com.google.common.hash.Hashing
 import com.nhaarman.mockitokotlin2.*
-import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.mockito.ArgumentMatchers.anyString
-import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 
 class NovaAgendaUseCaseTest {
@@ -43,6 +33,20 @@ class NovaAgendaUseCaseTest {
         verify(agendaRepository).salvar(any())
 
     }
+
+
+    @Test
+    fun testeCriarNovaAgendaPadrao() {
+
+        whenever(agendaRepository.salvar(any()))
+                .thenReturn(this.agenda)
+
+        this.novaAgendaUseCase.inserirAgendaPadrao("nome", 1)
+
+        verify(agendaRepository).salvar(any())
+
+    }
+
 
 
 }

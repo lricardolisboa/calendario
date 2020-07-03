@@ -1,20 +1,16 @@
-package br.com.r7.calendario.usecases
+package br.com.r7.calendario.usecases.usuario
 
-import br.com.r7.calendario.core.Agenda
 import br.com.r7.calendario.core.Usuario
 import br.com.r7.calendario.usecases.agenda.NovaAgendaUseCase
-import br.com.r7.calendario.usecases.exceptions.UsuarioExistenteException
+import br.com.r7.calendario.usecases.exceptions.UsuarioJaCadastradoException
 import br.com.r7.calendario.usecases.gateway.UsuarioRepository
-import br.com.r7.calendario.usecases.usuario.NovoUsuarioUseCase
-import com.google.common.hash.Hashing
 import com.nhaarman.mockitokotlin2.*
-import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
-import java.nio.charset.StandardCharsets
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.LocalDateTime
 
 class NovoUsuarioUseCaseTest {
@@ -45,10 +41,8 @@ class NovoUsuarioUseCaseTest {
 
         this.novoUsuarioUseCase.execute(this.usuario)
 
-        val senhaCriptografada = Hashing.sha512().hashString(usuario.senha, StandardCharsets.UTF_8).toString()
-
         verify(usuarioRepository).isUsuarioCadastrado(anyString())
-        verify(usuarioRepository).salvar(argThat { senha == senhaCriptografada })
+        verify(usuarioRepository).salvar(argThat {  BCryptPasswordEncoder().matches(usuario.senha, senha) })
         verify(novaAgendaUseCase).inserirAgendaPadrao(anyString(), anyLong())
 
     }
@@ -59,7 +53,7 @@ class NovoUsuarioUseCaseTest {
         whenever(usuarioRepository.isUsuarioCadastrado(anyString()))
                 .thenReturn(true)
 
-        assertThrows<UsuarioExistenteException> ("Login já cadastrado no sistema") { this.novoUsuarioUseCase.execute(this.usuario) }
+        assertThrows<UsuarioJaCadastradoException> ("Login já cadastrado no sistema") { this.novoUsuarioUseCase.execute(this.usuario) }
 
         verify(usuarioRepository).isUsuarioCadastrado(anyString())
         verify(usuarioRepository, never()).salvar(any())
