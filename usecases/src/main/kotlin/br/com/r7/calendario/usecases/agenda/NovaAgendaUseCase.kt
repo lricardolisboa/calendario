@@ -13,18 +13,6 @@ class NovaAgendaUseCase(private val agendaRepository: AgendaRepository) {
         return this.agendaRepository.salvar(agenda.copy(dataCadastro = LocalDateTime.now()))
     }
 
-    fun inserirAgendaPadrao(nome: String, idUsuario: Long) {
-        val agendaPadrao = Agenda(
-                id = null,
-                nome = nome,
-                descricao = "Agenda $nome",
-                idUsuario = idUsuario,
-                dataCadastro = LocalDateTime.now()
-        )
-
-        this.execute(agendaPadrao)
-    }
-
     interface AgendaRepository{
         fun salvar(agenda: Agenda): Agenda
     }

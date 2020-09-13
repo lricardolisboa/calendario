@@ -3,6 +3,7 @@ package br.com.r7.calendario.usecases.usuario
 import br.com.r7.calendario.core.Usuario
 import br.com.r7.calendario.usecases.agenda.NovaAgendaUseCase
 import br.com.r7.calendario.usecases.exceptions.UsuarioJaCadastradoException
+import br.com.r7.calendario.usecases.gateway.AgendaRepository
 import br.com.r7.calendario.usecases.gateway.UsuarioRepository
 import com.nhaarman.mockitokotlin2.*
 import org.junit.jupiter.api.BeforeEach
@@ -16,16 +17,16 @@ import java.time.LocalDateTime
 class NovoUsuarioUseCaseTest {
 
     private lateinit var novoUsuarioUseCase: NovoUsuarioUseCase
-    private lateinit var novaAgendaUseCase: NovaAgendaUseCase
     private lateinit var usuario: Usuario
+    private lateinit var agendaRepository: AgendaRepository
     private lateinit var usuarioRepository: UsuarioRepository
 
     @BeforeEach
     fun init() {
         this.usuarioRepository = mock()
-        this.novaAgendaUseCase = mock()
+        this.agendaRepository = mock()
 
-        this.novoUsuarioUseCase = NovoUsuarioUseCase(usuarioRepository,novaAgendaUseCase)
+        this.novoUsuarioUseCase = NovoUsuarioUseCase(usuarioRepository,agendaRepository)
 
         this.usuario = Usuario(id = null, login = "email@email.com", nome = "usuario", senha = "seNha", dataCadastro = LocalDateTime.now())
     }
@@ -37,13 +38,13 @@ class NovoUsuarioUseCaseTest {
                 .thenReturn(false)
         whenever(usuarioRepository.salvar(any()))
                 .thenReturn(this.usuario.copy(id = 1))
-        doNothing().whenever(novaAgendaUseCase).inserirAgendaPadrao(anyString(), anyLong())
+        doNothing().whenever(agendaRepository).inserirAgendaPadrao(any())
 
         this.novoUsuarioUseCase.execute(this.usuario)
 
         verify(usuarioRepository).isUsuarioCadastrado(anyString())
         verify(usuarioRepository).salvar(argThat {  BCryptPasswordEncoder().matches(usuario.senha, senha) })
-        verify(novaAgendaUseCase).inserirAgendaPadrao(anyString(), anyLong())
+        verify(agendaRepository).inserirAgendaPadrao(any())
 
     }
 
@@ -57,7 +58,7 @@ class NovoUsuarioUseCaseTest {
 
         verify(usuarioRepository).isUsuarioCadastrado(anyString())
         verify(usuarioRepository, never()).salvar(any())
-        verify(novaAgendaUseCase, never()).inserirAgendaPadrao(anyString(), anyLong())
+        verify(agendaRepository, never()).inserirAgendaPadrao(any())
 
     }
 

@@ -34,19 +34,4 @@ class NovaAgendaUseCaseTest {
 
     }
 
-
-    @Test
-    fun testeCriarNovaAgendaPadrao() {
-
-        whenever(agendaRepository.salvar(any()))
-                .thenReturn(this.agenda)
-
-        this.novaAgendaUseCase.inserirAgendaPadrao("nome", 1)
-
-        verify(agendaRepository).salvar(any())
-
-    }
-
-
-
 }

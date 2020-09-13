@@ -2,6 +2,7 @@ package br.com.r7.calendario.handler
 
 import br.com.r7.calendario.dto.ApiErrorDTO
 import br.com.r7.calendario.usecases.exceptions.UsuarioJaCadastradoException
+import br.com.r7.calendario.usecases.exceptions.UsuarioNaoEncontradoException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.AuthenticationException
@@ -28,6 +29,12 @@ class ExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UsuarioJaCadastradoException::class)
     fun camposInvalidos(ex: UsuarioJaCadastradoException) : ApiErrorDTO{
+        return ApiErrorDTO(ex.message!!)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UsuarioNaoEncontradoException::class)
+    fun camposInvalidos(ex: UsuarioNaoEncontradoException) : ApiErrorDTO{
         return ApiErrorDTO(ex.message!!)
     }
 

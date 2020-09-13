@@ -3,6 +3,7 @@ package br.com.r7.calendario.usecases.usuario
 import br.com.r7.calendario.core.Usuario
 import br.com.r7.calendario.usecases.agenda.NovaAgendaUseCase
 import br.com.r7.calendario.usecases.exceptions.UsuarioJaCadastradoException
+import br.com.r7.calendario.usecases.gateway.AgendaRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,7 +11,7 @@ import java.time.LocalDateTime
 
 @Service
 class NovoUsuarioUseCase(private val usuarioRepository: UsuarioRepository,
-                         private val agendaUseCase: NovaAgendaUseCase)  {
+                         private val agendaRepository: AgendaRepository)  {
 
     private val passwordEncoder = BCryptPasswordEncoder()
 
@@ -24,7 +25,7 @@ class NovoUsuarioUseCase(private val usuarioRepository: UsuarioRepository,
 
         val usuarioSalvo = this.usuarioRepository.salvar(usuario.copy(dataCadastro = LocalDateTime.now(), senha = senhaCriptografada))
 
-        this.agendaUseCase.inserirAgendaPadrao(usuarioSalvo.nome,usuarioSalvo.id!!)
+        this.agendaRepository.inserirAgendaPadrao(usuarioSalvo)
 
         return usuarioSalvo
     }
@@ -32,6 +33,10 @@ class NovoUsuarioUseCase(private val usuarioRepository: UsuarioRepository,
     interface UsuarioRepository{
         fun salvar(usuario : Usuario): Usuario
         fun isUsuarioCadastrado(login : String): Boolean
+    }
+
+    interface AgendaRepository{
+        fun inserirAgendaPadrao(usuario : Usuario)
     }
 }
 

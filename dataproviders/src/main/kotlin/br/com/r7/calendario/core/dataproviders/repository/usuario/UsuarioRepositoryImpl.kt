@@ -7,7 +7,6 @@ import br.com.r7.calendario.core.dataproviders.entities.toUsuario
 import br.com.r7.calendario.core.dataproviders.helpers.unwrap
 import br.com.r7.calendario.usecases.gateway.UsuarioRepository
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 class UsuarioRepositoryImpl(private val dbUsuarioRepository: DBUsuarioRepository) : UsuarioRepository {
@@ -27,6 +26,11 @@ class UsuarioRepositoryImpl(private val dbUsuarioRepository: DBUsuarioRepository
 
     override fun findById(id: Long): Usuario? {
         return this.dbUsuarioRepository.findById(id).unwrap(UsuarioEntity::toUsuario)
+    }
+
+    override fun isListaUsuariosCadastrados(logins: List<String>): Boolean {
+        val usersFound = this.dbUsuarioRepository.countByLoginIn(logins)
+        return usersFound.toInt() == logins.size
     }
 
 }

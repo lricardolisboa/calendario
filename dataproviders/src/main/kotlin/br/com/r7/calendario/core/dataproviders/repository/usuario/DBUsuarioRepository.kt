@@ -8,6 +8,7 @@ import java.util.*
 interface DBUsuarioRepository : JpaRepository<UsuarioEntity, Long>{
 
     fun existsByLogin(login: String): Boolean
+    fun countByLoginIn(login: List<String>): Long
     fun findByLogin(login: String): Optional<UsuarioEntity>
 
 }
